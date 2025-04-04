@@ -42,7 +42,8 @@ foldDoc base fTexto fLinea (Linea n doc) = fLinea n (foldDoc base fTexto fLinea 
 infixr 6 <+>
 
 (<+>) :: Doc -> Doc -> Doc
-d1 <+> d2 = error "PENDIENTE: Ejercicio 2"
+(Vacio) <+> (Vacio) = Vacio
+(Texto str1 _) <+> (Texto str2 _) = Texto (str1 ++ str2) Vacio
 
 indentar :: Int -> Doc -> Doc
 indentar i = error "PENDIENTE: Ejercicio 3"
