@@ -44,12 +44,14 @@ infixr 6 <+>
 (<+>) :: Doc -> Doc -> Doc
 (Vacio) <+> (Vacio) = Vacio
 (Texto str1 _) <+> (Texto str2 _) = Texto (str1 ++ str2) Vacio
+(Linea i _) <+> (Texto str2 _) = Linea i (Texto str2 Vacio)
+(Texto str2 _) <+> (Linea i _) = Texto str2 (Linea i Vacio)
 
 indentar :: Int -> Doc -> Doc
-indentar i = error "PENDIENTE: Ejercicio 3"
+indentar i = foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + i) rec)
 
 mostrar :: Doc -> String
-mostrar = error "PENDIENTE: Ejercicio 4"
+mostrar = undefined
 
 -- | Función dada que imprime un documento en pantalla
 
