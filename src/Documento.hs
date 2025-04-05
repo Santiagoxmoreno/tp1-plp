@@ -51,7 +51,11 @@ indentar :: Int -> Doc -> Doc
 indentar i = foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + i) rec)
 
 mostrar :: Doc -> String
-mostrar = undefined
+mostrar = foldDoc "" (\x rec -> x ++ rec) (\x rec -> "\n" ++ nEspacios x ++ rec)
+          where nEspacios = foldr (\x rec n -> if n == 0 then [] else " "++rec(n-1)) (const []) (repeat " ")
+
+--[1,2,3]
+--f 1 (f 2 (f 3 base))
 
 -- | Función dada que imprime un documento en pantalla
 
