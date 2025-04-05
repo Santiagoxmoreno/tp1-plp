@@ -18,7 +18,8 @@ pponObjetoSimple (ObjetoPP lista) = foldr (&&) True (map (pponAtomico . snd) lis
 pponObjetoSimple _ = False
 
 intercalar :: Doc -> [Doc] -> Doc
-intercalar = error "PENDIENTE: Ejercicio 7"
+intercalar _ [] = texto ""
+intercalar s lista = foldr1 (\x rec -> x <+> s <+> rec) lista
 
 entreLlaves :: [Doc] -> Doc
 entreLlaves [] = texto "{ }"
