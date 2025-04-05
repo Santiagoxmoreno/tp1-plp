@@ -14,7 +14,8 @@ pponAtomico (IntPP _) = True
 pponAtomico _ = False
 
 pponObjetoSimple :: PPON -> Bool
-pponObjetoSimple = error "PENDIENTE: Ejercicio 6"
+pponObjetoSimple (ObjetoPP lista) = foldr (&&) True (map (pponAtomico . snd) lista)
+pponObjetoSimple _ = False
 
 intercalar :: Doc -> [Doc] -> Doc
 intercalar = error "PENDIENTE: Ejercicio 7"
