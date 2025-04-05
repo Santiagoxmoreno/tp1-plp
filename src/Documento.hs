@@ -42,10 +42,21 @@ foldDoc base fTexto fLinea (Linea n doc) = fLinea n (foldDoc base fTexto fLinea 
 infixr 6 <+>
 
 (<+>) :: Doc -> Doc -> Doc
-(Vacio) <+> (Vacio) = Vacio
-(Texto str1 _) <+> (Texto str2 _) = Texto (str1 ++ str2) Vacio
-(Linea i _) <+> (Texto str2 _) = Linea i (Texto str2 Vacio)
-(Texto str2 _) <+> (Linea i _) = Texto str2 (Linea i Vacio)
+d1 <+> d2 = foldDoc d2 fTexto fLinea d1
+            where fTexto = (\text documento -> if verificarTexto(documento) then concatenarTextos text documento else (Texto text documento))
+                  fLinea = (\n documento -> if verificarTexto(documento) then Linea n (documento) else lineaConLinea n documento)
+concatenarTextos :: String -> Doc -> Doc
+concatenarTextos str (Texto str2 documento) = Texto (str ++ str2) documento
+
+lineaConLinea :: Int -> Doc -> Doc
+lineaConLinea n1 (Linea n2 doc2) = Linea (n1 + n2) doc2
+
+textoAtexto :: String -> Doc -> Doc
+textoAtexto str (Texto str2 doc2) = Texto (str ++ str2) doc2  
+
+verificarTexto :: Doc -> Bool 
+verificarTexto (Texto _ _) = True
+verificarTexto _ = False
 
 indentar :: Int -> Doc -> Doc
 indentar i = foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + i) rec)
