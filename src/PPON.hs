@@ -34,7 +34,11 @@ entreLlaves ds =
     <+> texto "}"
 
 aplanar :: Doc -> Doc
-aplanar = foldDoc vacio (\x rec -> texto x <+> rec) (\x rec -> texto " " <+> rec) 
+aplanar = foldDoc vacio (\x rec -> texto x <+> rec) (\x rec -> texto " " <+> rec)
 
 pponADoc :: PPON -> Doc
-pponADoc = error "PENDIENTE: Ejercicio 9"
+pponADoc (TextoPP str) = texto (show str)
+pponADoc (IntPP n) = texto (show n)
+pponADoc (ObjetoPP lista) = (if pponAtomico (snd $ head lista) then entreLlaves2 else entreLlaves) (map aux lista)
+                            where entreLlaves2 docs = texto "{ " <+> intercalar (texto ", ") docs <+> texto " }"
+                                  aux (str, pp) = texto ((show str) ++ ": ") <+> (pponADoc pp)
