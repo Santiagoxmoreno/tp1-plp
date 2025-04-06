@@ -43,23 +43,15 @@ infixr 6 <+>
 
 (<+>) :: Doc -> Doc -> Doc
 d1 <+> d2 = foldDoc d2 fTexto fLinea d1
-            where fTexto = (\text documento -> if verificarTexto(documento) then concatenarTextos text documento else (Texto text documento))
-                  fLinea = (\n documento -> if verificarTexto(documento) then Linea n (documento) else lineaConLinea n documento)
-concatenarTextos :: String -> Doc -> Doc
-concatenarTextos str (Texto str2 documento) = Texto (str ++ str2) documento
-
-lineaConLinea :: Int -> Doc -> Doc
-lineaConLinea n1 (Linea n2 doc2) = Linea (n1 + n2) doc2
-
-textoAtexto :: String -> Doc -> Doc
-textoAtexto str (Texto str2 doc2) = Texto (str ++ str2) doc2  
-
-verificarTexto :: Doc -> Bool 
-verificarTexto (Texto _ _) = True
-verificarTexto _ = False
+            where fTexto = (\text documento -> if esTexto(documento) then concatenarTextos text documento else (Texto text documento)) -- si son textos se concatenan, y si es linea o vacio se ponen al final
+                  fLinea = (\n documento -> if esTexto(documento) then Linea n (documento) else lineaConLinea n documento)
+                  concatenarTextos str (Texto str2 doc) = Texto (str ++ str2) doc --la concatenacion no puede producir string vacio, ni salto de linea, si ambos cumplen el invariante
+                  lineaConLinea n1 (Linea n2 doc2) = Linea n1 (Linea n2 doc2) --no se modifican las i de las lineas que estamos concatenando, entonces si no son menores a 0 el resultado tampoco
+                  esTexto (Texto _ _) = True
+                  esTexto _ = False
 
 indentar :: Int -> Doc -> Doc
-indentar i = foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + i) rec)
+indentar i = foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + i) rec) --si la linea no es negativa, entonces indentar no la va a hacer negativa, porque le suma un int mayor a 0
 
 mostrar :: Doc -> String
 mostrar = foldDoc "" (\x rec -> x ++ rec) (\x rec -> "\n" ++ nEspacios x ++ rec)
