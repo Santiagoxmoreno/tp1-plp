@@ -1,7 +1,8 @@
 Lemas:
-1.indentar k Vacio = Vacio para todo k :: Int positivo.
-2.indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int positivo, s :: String y d :: Doc.
-3.indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int positivo, s y d :: Doc.
+1. indentar k Vacio = Vacio para todo k :: Int positivo.
+2. indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int positivo, s :: String y d :: Doc.
+3. indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int positivo, s y d :: Doc.
+
 
 Definiciones:
 indentar :: Int -> Doc -> Doc
@@ -12,19 +13,59 @@ foldDoc base fTexto fLinea (Vacio) = base
 foldDoc base fTexto fLinea (Texto str doc) = fTexto str (foldDoc base fTexto fLinea doc)
 foldDoc base fTexto fLinea (Linea n doc) = fLinea n (foldDoc base fTexto fLinea doc)
 
+
 Buscamos probar:
-Para todo n, m :: Int positivos , x :: Doc
-indentar n (indentar m x) = indentar (n+m) x
+P ≡ indentar n (indentar m x) = indentar (n+m) x; ∀n, m :: Int positivos , x :: Doc
 
-Caso Base (x vacio)
-indentar n (indentar m vacio) = indentar (n+m) vacio 
-indentar n vacio              = vacio                    (por lema1: indentar k Vacio = Vacio para todo k :: Int positivo.)
-vacio                         = vacio                    (por lema1: indentar k Vacio = Vacio para todo k :: Int positivo.)
+Por induccion en la estructura de x, basta ver:
+1. Caso base, P(Vacio).
+2. Caso inductivo, 
+  • ∀d :: Doc. ∀s :: String. (P(d) ⇒ P(Texto s d))
+  • ∀d :: Doc. ∀i :: Int.    (P(d) ⇒ P(Linea i d))
 
-para todo d :: Doc vale que:
-indentar n (indentar m d) = indentar (n+m) d
-qvq valen: 
-indentar n (indentar m (Texto s d)) = indentar (n+m) (Texto s d)
-indentar n (indentar m (Linea k d)) = indentar (n+m) (Linea k d)
+Caso Base (P(Vacio))
+  indentar n (indentar m Vacio) = indentar (n+m) Vacio 
+  indentar n Vacio              = Vacio                    (por lema1)
+  Vacio                         = Vacio                    (por lema1)
+
+Caso inductivo 1 (P(Texto s d)): 
+
+   indentar n (indentar m (Texto s d))
+ = indentar n (Texto s (indentar m d))       (por lema 2)
+ = Texto s (indentar n (indentar m d))       (por lema 2)
+ = Texto s (indentar (n+m) d)                (por Hipotesis Inductiva)
+ = indentar (n+m) (Texto s d)                (por lema 2)
+
+Caso inductivo 2 (P(Linea i d)):
+
+  indentar n (indentar m (Linea k d))       = indentar (n+m) (Linea k d)
+  indentar n (Linea (m+k) (indentar m d))   = Linea (m+k+n) (indentar (m+n) d)      (por lema 3)
+  Linea (n+m+k) (indentar n (indentar m d)) = Linea (m+k+n) (indentar (m+n) d)      (por lema 3)
+  Linea (m+k+n) (indentar (m+n) d)          = Linea (m+k+n) (indentar (m+n) d)      (por Hipotesis Inductiva)
 
 
+Demostracion de lemas:
+1.indentar k Vacio = Vacio para todo k :: Int positivo.
+
+indentar k Vacio 
+= foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + k) rec) Vacio        (por definicion de indentar)
+= Vacio                                                                            (por definicion de foldDoc)
+
+
+2.indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int positivo, s :: String y d :: Doc.
+
+indentar k (Texto s d)
+= foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + k) rec) (Texto s d)                          (por definicion de indentar)
+= (\x rec -> Texto x rec) s (foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + k) rec) d)        (por definicion de foldDoc)
+= (\x rec -> Texto x rec) s (indentar k d)                                                                 (por definicion de indentar)
+= Texto s (indentar k d)                                                                                   (por aplicar la lambda)
+
+
+3.indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int positivo, s y d :: Doc.
+
+indentar m (Linea k d)
+= foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + m) rec) (Linea k d)                                 (por definicion de indentar)
+= (\x rec -> Linea (x + m) rec) k (foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + m) rec) d)         (por definicion de foldDoc)
+= (\x rec -> Linea (x + m) rec) k (indentar m d)                                                                  (por definicion de indentar)
+= Linea (k + m) (indentar m d)                                                                                    (por aplicar la lambda)
+= Linea (m+k) (indentar m d)                                                                                      (por conmutatividad de la suma)
