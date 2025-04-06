@@ -24,7 +24,10 @@ testsEj2 =
   test
     [ vacio <+> vacio ~?= vacio,
       texto "a" <+> texto "b" ~?= texto "ab",
-      (texto "a" <+> linea) <+> texto "b" ~?= texto "a" <+> (linea <+> texto "b")
+      (texto "a" <+> linea) <+> texto "b" ~?= texto "a" <+> (linea <+> texto "b"),
+      mostrar (linea <+> linea) ~?= "\n\n",
+      (vacio <+> texto "a") ~?= texto "a",
+      (texto "a" <+> vacio) ~?= texto "a"
     ]
 
 testsEj3 :: Test
@@ -33,7 +36,9 @@ testsEj3 =
     [ indentar 2 vacio ~?= vacio,
       indentar 2 (texto "a") ~?= texto "a",
       indentar 2 (texto "a" <+> linea <+> texto "b") ~?= texto "a" <+> indentar 2 (linea <+> texto "b"),
-      indentar 2 (linea <+> texto "a") ~?= indentar 1 (indentar 1 (linea <+> texto "a"))
+      indentar 2 (linea <+> texto "a") ~?= indentar 1 (indentar 1 (linea <+> texto "a")),
+      indentar 0 (linea <+> texto "a") ~?= linea <+> texto "a",
+      indentar 0 vacio ~?= vacio
     ]
 
 testsEj4 :: Test
@@ -41,7 +46,9 @@ testsEj4 =
   test
     [ mostrar vacio ~?= "",
       mostrar linea ~?= "\n",
-      mostrar (indentar 2 (texto "a" <+> linea <+> texto "b")) ~?= "a\n  b"
+      mostrar (indentar 2 (texto "a" <+> linea <+> texto "b")) ~?= "a\n  b",
+      mostrar (texto "hola") ~?= "hola",
+      mostrar (texto "hola" <+> linea <+> texto "mundo") ~?= "hola\nmundo"
     ]
 
 pericles, merlina, addams, familias :: PPON
@@ -50,11 +57,22 @@ merlina = ObjetoPP [("nombre", TextoPP "Merlina"), ("edad", IntPP 24)]
 addams = ObjetoPP [("0", pericles), ("1", merlina)]
 familias = ObjetoPP [("Addams", addams)]
 
+testsEj5 :: Test
+testsEj5 = 
+    test 
+      [ pponAtomico (TextoPP "hola") ~?= True,
+        pponAtomico (IntPP 8) ~?= True,
+        pponAtomico (ObjetoPP [("1", TextoPP "a")]) ~?= False,
+        pponAtomico (ObjetoPP [("a", addams)]) ~?= False,
+        pponAtomico (ObjetoPP []) ~?= False
+      ]
+
 testsEj6 :: Test
 testsEj6 =
   test
     [ pponObjetoSimple pericles ~?= True,
-      pponObjetoSimple addams ~?= False
+      pponObjetoSimple addams ~?= False,
+      pponObjetoSimple (ObjetoPP []) ~?= True
     ]
 
 a, b, c :: Doc
