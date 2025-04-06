@@ -23,7 +23,7 @@ Por induccion en la estructura de x, basta ver:
   • ∀d :: Doc. ∀s :: String. (P(d) ⇒ P(Texto s d))
   • ∀d :: Doc. ∀i :: Int.    (P(d) ⇒ P(Linea i d))
 
-Caso Base (P(Vacio))
+Caso base (P(Vacio))
   indentar n (indentar m Vacio) = indentar (n+m) Vacio 
   indentar n Vacio              = Vacio                    (por lema1)
   Vacio                         = Vacio                    (por lema1)
