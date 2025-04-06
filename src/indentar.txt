@@ -1,0 +1,30 @@
+Lemas:
+1.indentar k Vacio = Vacio para todo k :: Int positivo.
+2.indentar k (Texto s d) = Texto s (indentar k d) para todo k :: Int positivo, s :: String y d :: Doc.
+3.indentar m (Linea k d) = Linea (m+k) (indentar m d) para todo m, k :: Int positivo, s y d :: Doc.
+
+Definiciones:
+indentar :: Int -> Doc -> Doc
+indentar i = foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + i) rec)
+
+foldDoc :: b -> (String -> b -> b) -> (Int -> b -> b) -> Doc -> b
+foldDoc base fTexto fLinea (Vacio) = base
+foldDoc base fTexto fLinea (Texto str doc) = fTexto str (foldDoc base fTexto fLinea doc)
+foldDoc base fTexto fLinea (Linea n doc) = fLinea n (foldDoc base fTexto fLinea doc)
+
+Buscamos probar:
+Para todo n, m :: Int positivos , x :: Doc
+indentar n (indentar m x) = indentar (n+m) x
+
+Caso Base (x vacio)
+indentar n (indentar m vacio) = indentar (n+m) vacio 
+indentar n vacio              = vacio                    (por lema1: indentar k Vacio = Vacio para todo k :: Int positivo.)
+vacio                         = vacio                    (por lema1: indentar k Vacio = Vacio para todo k :: Int positivo.)
+
+para todo d :: Doc vale que:
+indentar n (indentar m d) = indentar (n+m) d
+qvq valen: 
+indentar n (indentar m (Texto s d)) = indentar (n+m) (Texto s d)
+indentar n (indentar m (Linea k d)) = indentar (n+m) (Linea k d)
+
+
