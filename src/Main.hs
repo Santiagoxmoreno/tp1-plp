@@ -13,6 +13,7 @@ allTests =
     [ "Ejercicio 2" ~: testsEj2,
       "Ejercicio 3" ~: testsEj3,
       "Ejercicio 4" ~: testsEj4,
+      "Ejercicio 5" ~: testsEj6,
       "Ejercicio 6" ~: testsEj6,
       "Ejercicio 7" ~: testsEj7,
       "Ejercicio 8" ~: testsEj8,
@@ -56,12 +57,16 @@ pericles = ObjetoPP [("nombre", TextoPP "Pericles"), ("edad", IntPP 30)]
 merlina = ObjetoPP [("nombre", TextoPP "Merlina"), ("edad", IntPP 24)]
 addams = ObjetoPP [("0", pericles), ("1", merlina)]
 familias = ObjetoPP [("Addams", addams)]
+pedro = ObjetoPP [("p", pericles), ("m", merlina), ("a", addams)]
+hola = TextoPP "hola"
+numero = IntPP 9
 
 testsEj5 :: Test
 testsEj5 = 
     test 
       [ pponAtomico (TextoPP "hola") ~?= True,
         pponAtomico (IntPP 8) ~?= True,
+        pponAtomico (pedro) ~?= False,
         pponAtomico (ObjetoPP [("1", TextoPP "a")]) ~?= False,
         pponAtomico (ObjetoPP [("a", addams)]) ~?= False,
         pponAtomico (ObjetoPP []) ~?= False
@@ -71,14 +76,17 @@ testsEj6 :: Test
 testsEj6 =
   test
     [ pponObjetoSimple pericles ~?= True,
+      pponObjetoSimple merlina ~?= True,
+      pponObjetoSimple (ObjetoPP []) ~?= True,
       pponObjetoSimple addams ~?= False,
-      pponObjetoSimple (ObjetoPP []) ~?= True
+      pponObjetoSimple pedro ~?= False
     ]
 
 a, b, c :: Doc
 a = texto "a"
 b = texto "b"
 c = texto "c"
+ola = texto "ola"
 
 testsEj7 :: Test
 testsEj7 =
@@ -86,13 +94,20 @@ testsEj7 =
     [ mostrar (intercalar (texto ", ") []) ~?= "",
       mostrar (intercalar (texto ", ") [a, b, c]) ~?= "a, b, c",
       mostrar (entreLlaves []) ~?= "{ }",
-      mostrar (entreLlaves [a, b, c]) ~?= "{\n  a,\n  b,\n  c\n}"
+      mostrar (entreLlaves [a, b, c]) ~?= "{\n  a,\n  b,\n  c\n}",
+      mostrar (ola <+> linea <+> texto "lol") ~?= "ola\nlol",
+      mostrar (entreLlaves [intercalar (texto ", ") [a, b, c]]) ~?= "{\n  a, b, c\n}",
+      mostrar (intercalar (texto ", ") [(entreLlaves [intercalar (texto ", ") [a]]),(entreLlaves [intercalar (texto ", ") [b]])]) ~?= "{\n  a\n}, {\n  b\n}"
     ]
 
 testsEj8 :: Test
 testsEj8 =
   test
-    [ mostrar (aplanar (a <+> linea <+> b <+> linea <+> c)) ~?= "a b c"
+    [ mostrar (aplanar (a <+> linea <+> b <+> linea <+> c)) ~?= "a b c",
+      mostrar (aplanar ola <+> a) ~?= "olaa",
+      mostrar (aplanar a) ~?= "a",
+      mostrar (aplanar vacio) ~?= "",
+      mostrar (aplanar (a <+> linea <+> linea <+> c)) ~?= "a  c"
     ]
 
 testsEj9 :: Test
@@ -100,5 +115,8 @@ testsEj9 =
   test
     [ mostrar (pponADoc pericles) ~?= "{ \"nombre\": \"Pericles\", \"edad\": 30 }",
       mostrar (pponADoc addams) ~?= "{\n  \"0\": { \"nombre\": \"Pericles\", \"edad\": 30 },\n  \"1\": { \"nombre\": \"Merlina\", \"edad\": 24 }\n}",
-      mostrar (pponADoc familias) ~?= "{\n  \"Addams\": {\n    \"0\": { \"nombre\": \"Pericles\", \"edad\": 30 },\n    \"1\": { \"nombre\": \"Merlina\", \"edad\": 24 }\n  }\n}"
+      mostrar (pponADoc familias) ~?= "{\n  \"Addams\": {\n    \"0\": { \"nombre\": \"Pericles\", \"edad\": 30 },\n    \"1\": { \"nombre\": \"Merlina\", \"edad\": 24 }\n  }\n}",
+      mostrar (pponADoc hola) ~?= "\"hola\"",
+      mostrar (pponADoc numero) ~?= "9",
+      mostrar (pponADoc (ObjetoPP [])) ~?= "{  }"
     ]
