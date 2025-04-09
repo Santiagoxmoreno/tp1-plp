@@ -54,8 +54,7 @@ indentar :: Int -> Doc -> Doc
 indentar i = foldDoc Vacio (\x rec -> Texto x rec) (\x rec -> Linea (x + i) rec) --si la linea no es negativa, entonces indentar no la va a hacer negativa, porque le suma un int mayor a 0
 
 mostrar :: Doc -> String
-mostrar = foldDoc "" (\x rec -> x ++ rec) (\x rec -> "\n" ++ nEspacios x ++ rec)
-          where nEspacios = foldr (\x rec n -> if n == 0 then [] else " "++rec(n-1)) (const []) (repeat " ")
+mostrar = foldDoc "" (++) (\x rec -> "\n" ++ (foldr (++) [] $ take x $ repeat " ") ++ rec)
 
 --[1,2,3]
 --f 1 (f 2 (f 3 base))
