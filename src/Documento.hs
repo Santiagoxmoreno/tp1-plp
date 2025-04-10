@@ -50,7 +50,7 @@ indentar :: Int -> Doc -> Doc
 indentar i = foldDoc Vacio (Texto) (\x rec -> Linea (x + i) rec) --no modifica al texto, y si la linea no es negativa, entonces indentar no la va a hacer negativa, porque le suma un int mayor a 0
 
 mostrar :: Doc -> String
-mostrar = foldDoc "" (++) (\x rec -> "\n" ++ (foldr (++) [] $ take x $ repeat " ") ++ rec)
+mostrar = foldDoc "" (++) (\x rec -> "\n" ++ (replicate x ' ') ++ rec)
 
 -- | Función dada que imprime un documento en pantalla
 
