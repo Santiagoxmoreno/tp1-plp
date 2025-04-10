@@ -95,7 +95,7 @@ testsEj7 =
       mostrar (intercalar (texto ", ") [a, b, c]) ~?= "a, b, c",
       mostrar (entreLlaves []) ~?= "{ }",
       mostrar (entreLlaves [a, b, c]) ~?= "{\n  a,\n  b,\n  c\n}",
-      mostrar (ola <+> linea <+> texto "lol") ~?= "ola\nlol",
+      mostrar (intercalar linea [texto "a", texto "b", texto "c"]) ~?= "a\nb\nc",
       mostrar (entreLlaves [intercalar (texto ", ") [a, b, c]]) ~?= "{\n  a, b, c\n}",
       mostrar (intercalar (texto ", ") [(entreLlaves [intercalar (texto ", ") [a]]),(entreLlaves [intercalar (texto ", ") [b]])]) ~?= "{\n  a\n}, {\n  b\n}"
     ]
