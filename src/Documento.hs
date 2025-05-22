@@ -38,13 +38,9 @@ foldDoc base fTexto fLinea (Linea n doc) = fLinea n (foldDoc base fTexto fLinea 
 infixr 6 <+>
 
 (<+>) :: Doc -> Doc -> Doc
-d1 <+> d2 = foldDoc d2 fTexto fLinea d1
-            where fTexto txt doc = if esTexto(doc) then concatenarTextos txt doc else (Texto txt doc) -- si son textos se concatenan, y si es linea o vacio se ponen al final
-                  fLinea n doc = if esTexto(doc) then Linea n (doc) else lineaConLinea n doc
-                  concatenarTextos str (Texto str2 doc) = Texto (str ++ str2) doc --la concatenacion no puede producir string vacio, ni salto de linea, si ambos cumplen el invariante
-                  lineaConLinea n1 (Linea n2 doc2) = Linea n1 (Linea n2 doc2) --no se modifican las i de las lineas que estamos concatenando, entonces si no son menores a 0 el resultado tampoco
-                  esTexto (Texto _ _) = True
-                  esTexto _ = False
+d1 <+> d2 = foldDoc d2 fTexto Linea d1 -- si d1 es una linea, se le agrega d2 al final
+            where fTexto txt (Texto str doc) = Texto (txt ++ str) doc -- si son dos textos se concatenan en uno, asi se mantiene el invariante
+                  fTexto txt doc = Texto txt doc  -- si no son dos textos, simplemente se juntan
 
 indentar :: Int -> Doc -> Doc
 indentar i = foldDoc Vacio (Texto) (\x rec -> Linea (x + i) rec) --no modifica al texto, y si la linea no es negativa, entonces indentar no la va a hacer negativa, porque le suma un int mayor a 0

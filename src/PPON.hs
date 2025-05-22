@@ -48,6 +48,6 @@ pponADoc (TextoPP str) = texto (show str)
 pponADoc (IntPP n) = texto (show n)
 pponADoc (ObjetoPP []) = texto "{  }"
 pponADoc (ObjetoPP lista) = (if pponAtomico (snd $ head lista) then entreLlaves2 else entreLlaves) (map aux lista)
-                            where entreLlaves2 docs = texto "{ " <+> intercalar (texto ", ") docs <+> texto " }"
+                            where entreLlaves2 doc = texto "{ " <+> intercalar (texto ", ") doc <+> texto " }"
                                   aux (str, pp) = texto ((show str) ++ ": ") <+> (pponADoc pp)
 

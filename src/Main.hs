@@ -28,7 +28,9 @@ testsEj2 =
       (texto "a" <+> linea) <+> texto "b" ~?= texto "a" <+> (linea <+> texto "b"),
       mostrar (linea <+> linea) ~?= "\n\n",
       (vacio <+> texto "a") ~?= texto "a",
-      (texto "a" <+> vacio) ~?= texto "a"
+      (texto "a" <+> vacio) ~?= texto "a",
+      linea <+> vacio ~?= linea,
+      vacio <+> linea ~?= linea
     ]
 
 testsEj3 :: Test
@@ -40,6 +42,7 @@ testsEj3 =
       indentar 2 (linea <+> texto "a") ~?= indentar 1 (indentar 1 (linea <+> texto "a")),
       indentar 0 (linea <+> texto "a") ~?= linea <+> texto "a",
       indentar 0 vacio ~?= vacio
+      
     ]
 
 testsEj4 :: Test
