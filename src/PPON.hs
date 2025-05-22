@@ -14,7 +14,7 @@ pponAtomico (IntPP _) = True
 pponAtomico _ = False
 
 pponObjetoSimple :: PPON -> Bool
-pponObjetoSimple (ObjetoPP lista) = foldr (&&) True (map (pponAtomico . snd) lista)
+pponObjetoSimple (ObjetoPP lista) = all (pponAtomico . snd) lista
 pponObjetoSimple _ = False
 
 intercalar :: Doc -> [Doc] -> Doc
@@ -46,8 +46,8 @@ la recursion estructural, decimos que la funcion usa recursion primitiva.
 pponADoc :: PPON -> Doc
 pponADoc (TextoPP str) = texto (show str)
 pponADoc (IntPP n) = texto (show n)
-pponADoc (ObjetoPP []) = texto "{  }"
-pponADoc (ObjetoPP lista) = (if pponAtomico (snd $ head lista) then entreLlaves2 else entreLlaves) (map aux lista)
-                            where entreLlaves2 doc = texto "{ " <+> intercalar (texto ", ") doc <+> texto " }"
-                                  aux (str, pp) = texto ((show str) ++ ": ") <+> (pponADoc pp)
+pponADoc (ObjetoPP lista) = (if pponObjetoSimple $ ObjetoPP lista then aplanar else id) $ entreLlaves $ map aux lista
+                            where aux (str, pp) = texto (show str ++ ": ") <+> pponADoc pp
 
+-- En el `pponADoc`, solo verifican si el primer objeto dentro de la lista
+-- es atómico en lugar de verificar si todo el ppon es simple. Con lo cual no resuelven algunos casos.

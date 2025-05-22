@@ -121,5 +121,15 @@ testsEj9 =
       mostrar (pponADoc familias) ~?= "{\n  \"Addams\": {\n    \"0\": { \"nombre\": \"Pericles\", \"edad\": 30 },\n    \"1\": { \"nombre\": \"Merlina\", \"edad\": 24 }\n  }\n}",
       mostrar (pponADoc hola) ~?= "\"hola\"",
       mostrar (pponADoc numero) ~?= "9",
-      mostrar (pponADoc (ObjetoPP [])) ~?= "{  }"
+      mostrar (pponADoc (ObjetoPP [])) ~?= "{ }",
+
+      mostrar (pponADoc (ObjetoPP [
+        ("texto", TextoPP "valor"),
+        ("numero", IntPP 42),
+        ("objeto", ObjetoPP [
+          ("subtexto", TextoPP "subvalor"),
+          ("subnumero", IntPP 24)
+        ])
+      ])) ~?= "{\n  \"texto\": \"valor\",\n  \"numero\": 42,\n  \"objeto\": { \"subtexto\": \"subvalor\", \"subnumero\": 24 }\n}"
+      
     ]
