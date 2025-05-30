@@ -39,7 +39,7 @@ infixr 6 <+>
 
 (<+>) :: Doc -> Doc -> Doc
 d1 <+> d2 = foldDoc d2 fTexto Linea d1 -- si d1 es una linea, se le agrega d2 al final, y mantiene el i >= 0 que ya tenia
-            where fTexto str1 (Texto str2 doc) = Texto (str1 ++ str2) doc -- si son dos textos se concatenan en uno, asi se mantiene el invariante, y como suponemos que "(Texto str2 doc)" cuple el invariante, doc es una linea o vacio, entonces "Texto (str1 ++ str2) doc" también cumple
+            where fTexto str1 (Texto str2 doc) = Texto (str1 ++ str2) doc -- si son dos textos se concatenan en uno, asi se mantiene el invariante, y como suponemos que "(Texto str2 doc)" cumple el invariante, doc es una linea o vacio, entonces "Texto (str1 ++ str2) doc" también cumple
                   fTexto str doc = Texto str doc  -- si no son dos textos, simplemente se juntan. Como "str doc" cumple el invariante, doc es linea o vacio, por lo que "Texto str doc" también cumple 
 
 indentar :: Int -> Doc -> Doc
